@@ -1,12 +1,15 @@
 package org.rudradcruze.securityapp.securityapplication.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.rudradcruze.securityapp.securityapplication.dto.PostDto;
 import org.rudradcruze.securityapp.securityapplication.entities.PostEntity;
+import org.rudradcruze.securityapp.securityapplication.entities.User;
 import org.rudradcruze.securityapp.securityapplication.exceptions.ResourceNotFoundException;
 import org.rudradcruze.securityapp.securityapplication.repositories.PostRepository;
 import org.springframework.data.util.ReflectionUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
@@ -31,7 +35,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long id) {
-        return postRepository.findById(id).map(postEntity -> modelMapper.map(postEntity, PostDto.class)).orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("User: {}", user);
+        return postRepository
+                .findById(id)
+                .map(postEntity -> modelMapper
+                        .map(postEntity, PostDto.class))
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id " + id));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.rudradcruze.securityapp.securityapplication.advice;
 
+import org.rudradcruze.securityapp.securityapplication.exceptions.IllegalArgumentException;
 import org.rudradcruze.securityapp.securityapplication.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException exception) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, exception.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException exception) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
