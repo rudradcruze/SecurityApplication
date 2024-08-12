@@ -14,6 +14,7 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final SessionService sessionService;
 
 
     public String login(LoginDto loginDto) {
@@ -22,6 +23,10 @@ public class AuthService {
         );
 
         User user = (User) authentication.getPrincipal();
-        return jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
+
+        sessionService.createSession(user, token);
+
+        return token;
     }
 }

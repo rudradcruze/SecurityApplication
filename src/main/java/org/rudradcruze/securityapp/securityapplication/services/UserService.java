@@ -9,7 +9,6 @@ import org.rudradcruze.securityapp.securityapplication.entities.User;
 import org.rudradcruze.securityapp.securityapplication.exceptions.ResourceNotFoundException;
 import org.rudradcruze.securityapp.securityapplication.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +27,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(() -> new BadCredentialsException("User with email " + username + " not found"));
+        return userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User with email " + username + " not found"));
     }
 
     public User getUserById(Long id) {

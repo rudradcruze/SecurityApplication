@@ -5,8 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.rudradcruze.securityapp.securityapplication.entities.Session;
 import org.rudradcruze.securityapp.securityapplication.entities.User;
 import org.rudradcruze.securityapp.securityapplication.services.JwtService;
+import org.rudradcruze.securityapp.securityapplication.services.SessionService;
 import org.rudradcruze.securityapp.securityapplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,6 +27,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final SessionService sessionService;
 
     @Autowired
     @Qualifier("handlerExceptionResolver")
@@ -42,7 +45,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = requestTokenHeader.split("Bearer ")[1];
             Long userId = jwtService.getUserIdFromToken(token);
 
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            Session session = sessionService.getSessionByUserId(userId);
+
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null && token.equals(session.getToken())) {
                 User user = userService.getUserById(userId);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
                 authenticationToken.setDetails(

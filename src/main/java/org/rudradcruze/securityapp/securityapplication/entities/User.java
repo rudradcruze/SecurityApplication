@@ -25,6 +25,9 @@ public class User implements UserDetails {
     private String password;
     private String name;
 
+    @OneToOne(mappedBy = "user")
+    private Session session;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

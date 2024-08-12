@@ -1,4 +1,4 @@
-package org.rudradcruze.securityapp.securityapplication.services;
+package org.rudradcruze.securityapp.securityapplication.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,7 @@ import org.rudradcruze.securityapp.securityapplication.entities.PostEntity;
 import org.rudradcruze.securityapp.securityapplication.entities.User;
 import org.rudradcruze.securityapp.securityapplication.exceptions.ResourceNotFoundException;
 import org.rudradcruze.securityapp.securityapplication.repositories.PostRepository;
+import org.rudradcruze.securityapp.securityapplication.services.PostService;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

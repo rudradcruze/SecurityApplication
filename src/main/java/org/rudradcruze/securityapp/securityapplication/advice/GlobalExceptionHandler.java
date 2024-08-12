@@ -5,7 +5,6 @@ import org.rudradcruze.securityapp.securityapplication.exceptions.IllegalArgumen
 import org.rudradcruze.securityapp.securityapplication.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,11 +18,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException exception) {
-//        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, exception.getMessage());
-//        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException exception) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
@@ -36,15 +35,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ApiError> handelAuthenticationException(AuthenticationException exception) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, exception.getLocalizedMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ApiError> handleJwtException(JwtException exception) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, exception.getLocalizedMessage());
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, exception.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
